@@ -501,7 +501,7 @@ async def get_ad_details(ad_id: str, access_token: Optional[str] = None) -> str:
         
     endpoint = f"{ad_id}"
     params = {
-        "fields": "id,name,adset_id,campaign_id,status,effective_status,issues_info,creative,created_time,updated_time,bid_amount,conversion_domain,tracking_specs,preview_shareable_link"
+        "fields": "id,name,adset_id,campaign_id,status,effective_status,issues_info,creative,created_time,updated_time,bid_amount,conversion_domain,tracking_specs,preview_shareable_link,creative_asset_groups_spec"
     }
     
     data = await make_api_request(endpoint, access_token, params)
