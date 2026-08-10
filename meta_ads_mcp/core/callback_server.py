@@ -2,9 +2,10 @@
 
 import threading
 import socket
-import asyncio
+import ssl
 import json
 import logging
+import time
 import webbrowser
 import os
 from http.server import HTTPServer, BaseHTTPRequestHandler
@@ -12,6 +13,19 @@ from urllib.parse import urlparse, parse_qs, quote
 from typing import Dict, Any, Optional
 
 from .utils import logger
+
+# Hostname the local OAuth callback server binds to and advertises in the
+# redirect URI. Override with META_ADS_OAUTH_HOST if your Meta app's App
+# Domains field rejects "localhost" — point a hosts-file entry (e.g.
+# "127.0.0.1 metaadslocal.dev") at loopback and set this to that hostname.
+OAUTH_HOST = os.environ.get("META_ADS_OAUTH_HOST", "localhost")
+
+# Optional TLS cert/key (e.g. from `mkcert metaadslocal.dev`) for Meta apps
+# that enforce HTTPS on their redirect URIs. When both are set, the callback
+# server serves HTTPS and the advertised redirect URI uses the https scheme.
+OAUTH_CERT_FILE = os.environ.get("META_ADS_OAUTH_CERT_FILE", "")
+OAUTH_KEY_FILE = os.environ.get("META_ADS_OAUTH_KEY_FILE", "")
+OAUTH_SCHEME = "https" if (OAUTH_CERT_FILE and OAUTH_KEY_FILE) else "http"
 
 # Global token container for communication between threads
 token_container = {"token": None, "expires_in": None, "user_id": None}
@@ -52,17 +66,19 @@ class CallbackHandler(BaseHTTPRequestHandler):
         # Check if we're being redirected from Facebook with an authorization code
         parsed_url = urlparse(self.path)
         params = parse_qs(parsed_url.query)
-        
-        # Check for code parameter
+
+        # Check for code/token parameters
         code = params.get('code', [None])[0]
+        access_token = params.get('access_token', [None])[0]
         state = params.get('state', [None])[0]
         error = params.get('error', [None])[0]
-        
+        error_description = params.get('error_description', [None])[0]
+
         # Send 200 OK response with a simple HTML page
         self.send_response(200)
         self.send_header("Content-type", "text/html")
         self.end_headers()
-        
+
         if error:
             # User denied access or other error occurred
             html = f"""
@@ -71,23 +87,52 @@ class CallbackHandler(BaseHTTPRequestHandler):
             <body>
                 <h1>Authorization Failed</h1>
                 <p>Error: {error}</p>
+                <p>{error_description or ''}</p>
                 <p>The authorization was cancelled or failed. You can close this window.</p>
             </body>
             </html>
             """
-            logger.error(f"OAuth authorization failed: {error}")
+            logger.error(f"OAuth authorization failed: {error} {error_description or ''}")
+        elif access_token:
+            # Success case - implicit grant (response_type=token) returned the
+            # access token, forwarded here from the URL fragment by the JS below
+            logger.info(f"Received access token: {access_token[:10]}...")
+
+            token_container.update({
+                "token": access_token,
+                "expires_in": int(params.get('expires_in', [0])[0] or 0),
+                "state": state,
+                "timestamp": time.time()
+            })
+
+            html = """
+            <html>
+            <head><title>Authorization Successful</title></head>
+            <body>
+                <h1>✅ Authorization Successful!</h1>
+                <p>You have successfully authorized the Meta Ads MCP application.</p>
+                <p>You can now close this window and return to your application.</p>
+                <script>
+                    // Try to close the window automatically after 2 seconds
+                    setTimeout(function() {
+                        window.close();
+                    }, 2000);
+                </script>
+            </body>
+            </html>
+            """
+            logger.info("OAuth authorization successful")
         elif code:
-            # Success case - we have the authorization code
+            # Authorization-code grant (not used by the current response_type=token
+            # auth URL, but handled in case that ever changes)
             logger.info(f"Received authorization code: {code[:10]}...")
-            
-            # Store the authorization code temporarily
-            # The auth module will exchange this for an access token
+
             token_container.update({
                 "auth_code": code,
                 "state": state,
-                "timestamp": asyncio.get_event_loop().time()
+                "timestamp": time.time()
             })
-            
+
             html = """
             <html>
             <head><title>Authorization Successful</title></head>
@@ -106,18 +151,39 @@ class CallbackHandler(BaseHTTPRequestHandler):
             """
             logger.info("OAuth authorization successful")
         else:
-            # No code or error - something unexpected happened
+            # Nothing in the query string. For response_type=token, Facebook
+            # redirects with the access token in the URL *fragment*
+            # (#access_token=...), which browsers never send to a server.
+            # Bridge it into a query string with a client-side redirect so
+            # this handler sees it on the next request.
             html = """
             <html>
-            <head><title>Unexpected Response</title></head>
+            <head><title>Authenticating...</title></head>
             <body>
-                <h1>Unexpected Response</h1>
-                <p>No authorization code or error received. Please try again.</p>
+                <p>Completing authentication...</p>
+                <script>
+                    var params = new URLSearchParams(window.location.hash.substring(1));
+                    var accessToken = params.get('access_token');
+                    var error = params.get('error');
+                    var forward = new URLSearchParams();
+                    if (accessToken) {
+                        forward.set('access_token', accessToken);
+                        if (params.get('expires_in')) forward.set('expires_in', params.get('expires_in'));
+                        if (params.get('state')) forward.set('state', params.get('state'));
+                        window.location.replace('/callback?' + forward.toString());
+                    } else if (error) {
+                        forward.set('error', error);
+                        if (params.get('error_description')) forward.set('error_description', params.get('error_description'));
+                        window.location.replace('/callback?' + forward.toString());
+                    } else {
+                        document.body.innerHTML = '<h1>Unexpected Response</h1><p>No authorization code or error received. Please try again.</p>';
+                    }
+                </script>
             </body>
             </html>
             """
-            logger.warning("OAuth callback received without code or error")
-        
+            logger.info("OAuth callback landed with no query params; attempting to bridge URL fragment via JS")
+
         self.wfile.write(html.encode())
     
     def _handle_token(self):
@@ -201,20 +267,17 @@ def start_callback_server() -> int:
             print(f"Callback server already running on port {callback_server_port}")
             return callback_server_port
         
-        # Find an available port
+        # Use a fixed port so it matches the app's configured OAuth Redirect URI
         port = 8080
-        max_attempts = 10
-        for attempt in range(max_attempts):
-            try:
-                # Test if port is available
-                with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-                    s.bind(('localhost', port))
-                break
-            except OSError:
-                port += 1
-        else:
-            raise Exception(f"Could not find an available port after {max_attempts} attempts")
-        
+        try:
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                s.bind((OAUTH_HOST, port))
+        except OSError:
+            raise Exception(
+                f"Port {port} is already in use. Free it up before logging in, since the "
+                f"Meta app's Valid OAuth Redirect URI is fixed to {OAUTH_SCHEME}://{OAUTH_HOST}:{port}/callback."
+            )
+
         callback_server_port = port
         
         # Start the server in a separate thread
@@ -236,7 +299,7 @@ def start_callback_server() -> int:
         server_shutdown_timer = threading.Timer(CALLBACK_SERVER_TIMEOUT, auto_shutdown)
         server_shutdown_timer.start()
         
-        print(f"Callback server started on http://localhost:{port}")
+        print(f"Callback server started on {OAUTH_SCHEME}://{OAUTH_HOST}:{port}")
         return port
 
 
@@ -245,9 +308,15 @@ def server_thread():
     global callback_server_running, callback_server_instance
     
     try:
-        callback_server_instance = HTTPServer(('localhost', callback_server_port), CallbackHandler)
+        callback_server_instance = HTTPServer((OAUTH_HOST, callback_server_port), CallbackHandler)
+        if OAUTH_CERT_FILE and OAUTH_KEY_FILE:
+            ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+            ssl_context.load_cert_chain(certfile=OAUTH_CERT_FILE, keyfile=OAUTH_KEY_FILE)
+            callback_server_instance.socket = ssl_context.wrap_socket(
+                callback_server_instance.socket, server_side=True
+            )
         callback_server_running = True
-        print(f"Callback server thread started on port {callback_server_port}")
+        print(f"Callback server thread started on port {callback_server_port} ({OAUTH_SCHEME})")
         callback_server_instance.serve_forever()
     except Exception as e:
         print(f"Callback server error: {e}")

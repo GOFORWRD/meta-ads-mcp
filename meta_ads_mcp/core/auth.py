@@ -16,7 +16,9 @@ from .callback_server import (
     start_callback_server,
     shutdown_callback_server,
     token_container,
-    callback_server_port
+    callback_server_port,
+    OAUTH_HOST,
+    OAUTH_SCHEME
 )
 
 # Import the new Pipeboard authentication
@@ -26,7 +28,7 @@ from .pipeboard_auth import pipeboard_auth_manager
 # Scope includes pages_show_list and pages_read_engagement to fix issue #16
 # where get_account_pages failed for regular users due to missing page permissions
 AUTH_SCOPE = "business_management,public_profile,pages_show_list,pages_read_engagement"
-AUTH_REDIRECT_URI = "http://localhost:8888/callback"
+AUTH_REDIRECT_URI = f"{OAUTH_SCHEME}://{OAUTH_HOST}:8080/callback"
 AUTH_RESPONSE_TYPE = "token"
 
 # Log important configuration information
@@ -258,7 +260,7 @@ class AuthManager:
             port = start_callback_server()
             
             # Update redirect URI with the actual port
-            self.redirect_uri = f"http://localhost:{port}/callback"
+            self.redirect_uri = f"{OAUTH_SCHEME}://{OAUTH_HOST}:{port}/callback"
             
             # Generate the auth URL
             auth_url = self.get_auth_url()
@@ -528,7 +530,10 @@ def login():
             print("- Set PIPEBOARD_API_TOKEN environment variable for Pipeboard authentication")
             print("- Or provide a direct META_ACCESS_TOKEN environment variable")
             return
-        
+
+        # Update redirect URI with the actual port before generating the auth URL
+        auth_manager.redirect_uri = f"{OAUTH_SCHEME}://{OAUTH_HOST}:{port}/callback"
+
         # Get the auth URL and open the browser
         auth_url = auth_manager.get_auth_url()
         print(f"Opening browser with URL: {auth_url}")
@@ -541,8 +546,13 @@ def login():
         
         for _ in range(max_wait // wait_interval):
             if token_container["token"]:
-                token = token_container["token"]
                 print("Authentication successful!")
+
+                # Exchange for a long-lived token, set it on auth_manager, and
+                # persist it to the token cache so future runs don't need --login
+                process_token_response(token_container)
+                token = auth_manager.token_info.access_token if auth_manager.token_info else token_container["token"]
+
                 # Verify token works by getting basic user info
                 try:
                     from .api import make_api_request

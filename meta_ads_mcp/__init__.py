@@ -4,6 +4,12 @@ Meta Ads MCP - Python Package
 This package provides a Meta Ads MCP integration
 """
 
+# Load environment variables from a .env file before any submodule reads
+# os.environ (e.g. META_APP_ID/META_APP_SECRET/PIPEBOARD_API_TOKEN), so
+# credentials work regardless of whether the current shell had them exported.
+from dotenv import load_dotenv, find_dotenv
+load_dotenv(find_dotenv(usecwd=True))
+
 from meta_ads_mcp.core.server import main
 
 __version__ = "1.0.119"

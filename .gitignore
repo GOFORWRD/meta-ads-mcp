@@ -18,6 +18,13 @@ uv.lock
 .uv.toml
 .cursor/
 
+# Local credentials
+.env
+.env.*
+!.env.example
+*.pem
+*-key.pem
+
 # Generated content
 ad_creatives/
 
