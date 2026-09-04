@@ -124,7 +124,7 @@ async def test_upload_ad_image_from_url_infers_name_and_prefixes_account_id():
 
         result = json.loads(result_json)
         assert result.get("success") is True
-        assert result.get("account_id") == "act_701351919139047"
+        assert result.get("account_id") == "act_100000000000001"
         # Name should be inferred from URL
         assert result.get("name") == "photo.jpg"
         # Primary hash should be derived from key when nested hash missing

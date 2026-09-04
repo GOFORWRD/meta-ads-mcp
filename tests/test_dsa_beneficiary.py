@@ -21,7 +21,7 @@ class TestDSABeneficiaryDetection:
     async def test_dsa_requirement_detection_business_account(self):
         """Test DSA requirement detection for European business accounts"""
         mock_account_response = {
-            "id": "act_701351919139047",
+            "id": "act_100000000000001",
             "name": "Test European Business Account",
             "account_status": 1,
             "business_country_code": "DE",  # Germany - DSA compliant
@@ -34,7 +34,7 @@ class TestDSABeneficiaryDetection:
                 mock_auth.return_value = "test_access_token"
                 mock_api.return_value = mock_account_response
                 
-                result = await get_account_info(account_id="act_701351919139047")
+                result = await get_account_info(account_id="act_100000000000001")
                 
                 # Handle new return format (dictionary instead of JSON string)
                 if isinstance(result, dict):
@@ -43,7 +43,7 @@ class TestDSABeneficiaryDetection:
                     result_data = json.loads(result)
                 
                 # Verify account info is retrieved
-                assert result_data["id"] == "act_701351919139047"
+                assert result_data["id"] == "act_100000000000001"
                 assert result_data["business_country_code"] == "DE"
                 
                 # Verify DSA requirement detection
@@ -180,7 +180,7 @@ class TestDSABeneficiaryParameter:
                 mock_api.return_value = mock_response
                 
                 result = await create_adset(
-                    account_id="act_701351919139047",
+                    account_id="act_100000000000001",
                     campaign_id="23842588888640184",
                     name="Test Ad Set with DSA",
                     optimization_goal="LINK_CLICKS",
@@ -214,7 +214,7 @@ class TestDSABeneficiaryParameter:
                 mock_api.side_effect = Exception("DSA beneficiary required for European compliance")
                 
                 result = await create_adset(
-                    account_id="act_701351919139047",
+                    account_id="act_100000000000001",
                     campaign_id="23842588888640184",
                     name="Test Ad Set",
                     optimization_goal="LINK_CLICKS",
@@ -242,7 +242,7 @@ class TestDSABeneficiaryParameter:
                 mock_api.side_effect = Exception("Enter the person or organization that benefits from ads in this ad set")
                 
                 result = await create_adset(
-                    account_id="act_701351919139047",
+                    account_id="act_100000000000001",
                     campaign_id="23842588888640184",
                     name="Test Ad Set",
                     optimization_goal="LINK_CLICKS",
@@ -270,7 +270,7 @@ class TestDSABeneficiaryParameter:
                 mock_api.return_value = {"id": "23842588888640185"}
                 
                 result = await create_adset(
-                    account_id="act_701351919139047",
+                    account_id="act_100000000000001",
                     campaign_id="23842588888640184",
                     name="Test Ad Set",
                     optimization_goal="LINK_CLICKS",
@@ -305,7 +305,7 @@ class TestDSABeneficiaryParameter:
                     mock_api.return_value = {"id": "23842588888640185"}
                     
                     result = await create_adset(
-                        account_id="act_701351919139047",
+                        account_id="act_100000000000001",
                         campaign_id="23842588888640184",
                         name="Test Ad Set",
                         optimization_goal="LINK_CLICKS",
@@ -331,7 +331,7 @@ class TestDSAPermissionHandling:
                 mock_api.side_effect = Exception("Permission denied: business_management permission required")
                 
                 result = await create_adset(
-                    account_id="act_701351919139047",
+                    account_id="act_100000000000001",
                     campaign_id="23842588888640184",
                     name="Test Ad Set",
                     optimization_goal="LINK_CLICKS",
@@ -359,7 +359,7 @@ class TestDSAPermissionHandling:
                 mock_api.side_effect = Exception("Parameter dsa_beneficiary is not supported")
                 
                 result = await create_adset(
-                    account_id="act_701351919139047",
+                    account_id="act_100000000000001",
                     campaign_id="23842588888640184",
                     name="Test Ad Set",
                     optimization_goal="LINK_CLICKS",
@@ -492,7 +492,7 @@ class TestDSAErrorHandling:
                     mock_api.side_effect = Exception(error_message)
                     
                     result = await create_adset(
-                        account_id="act_701351919139047",
+                        account_id="act_100000000000001",
                         campaign_id="23842588888640184",
                         name="Test Ad Set",
                         optimization_goal="LINK_CLICKS",
@@ -519,7 +519,7 @@ class TestDSAErrorHandling:
                 mock_api.side_effect = Exception("Unexpected DSA-related error")
                 
                 result = await create_adset(
-                    account_id="act_701351919139047",
+                    account_id="act_100000000000001",
                     campaign_id="23842588888640184",
                     name="Test Ad Set",
                     optimization_goal="LINK_CLICKS",

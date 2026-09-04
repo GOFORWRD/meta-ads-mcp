@@ -6,8 +6,8 @@ This test validates that the search tool correctly finds and returns
 account data for known test accounts.
 
 Expected test accounts:
-- act_4891437610982483 (Yves Junqueira)
-- act_701351919139047 (Injury Payouts)
+- act_100000000000004 (Test Account A)
+- act_100000000000001 (Test Account B)
 """
 
 import requests
@@ -35,13 +35,13 @@ class AccountSearchTester:
         # Expected test data
         self.expected_accounts = [
             {
-                "id": "act_4891437610982483", 
-                "name": "Yves Junqueira",
+                "id": "act_100000000000004", 
+                "name": "Test Account A",
                 "account_id": "4891437610982483"
             },
             {
-                "id": "act_701351919139047", 
-                "name": "Injury Payouts", 
+                "id": "act_100000000000001", 
+                "name": "Example Advertiser", 
                 "account_id": "701351919139047"
             }
         ]
@@ -104,7 +104,7 @@ class AccountSearchTester:
             "ad accounts", 
             "meta accounts",
             "Yves",
-            "Injury Payouts"
+            "Example Advertiser"
         ]
         
         results = {}

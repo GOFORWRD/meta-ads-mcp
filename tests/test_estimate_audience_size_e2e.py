@@ -46,7 +46,7 @@ class AudienceEstimationTester:
         self.request_id = 1
         
         # Default account ID from workspace rules
-        self.account_id = "act_701351919139047"
+        self.account_id = "act_100000000000001"
         
         # Test targeting specifications
         self.test_targeting_specs = {
@@ -216,7 +216,7 @@ class AudienceEstimationTester:
             uv run python -m meta_ads_mcp --transport streamable-http --port 8080
         """
         print(f"\n🇵🇱 Testing PL-only reachestimate bounds (fallback disabled)")
-        local_account_id = "act_3182643988557192"
+        local_account_id = "act_100000000000005"
         targeting_spec = {"geo_locations": {"countries": ["PL"]}}
         expected_lower = 18600000
         expected_upper = 21900000

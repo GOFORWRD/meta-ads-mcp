@@ -339,7 +339,7 @@ class TestDynamicCreatives:
         """create_ad_creative no longer rejects >5 headlines client-side.
 
         Meta enforces its own limit; pre-flight guards block payloads that the
-        Meta UI accepts (verified live 2026-04-30 against act_1276764704512927).
+        Meta UI accepts (verified live 2026-04-30 against act_100000000000002).
         Per feedback_no_preflight_validation: never strip/filter user-provided
         params before sending to Meta.
         """
@@ -591,7 +591,7 @@ class TestDynamicCreatives:
     async def test_update_ad_creative_no_preflight_headline_length_limit(self):
         """update_ad_creative no longer rejects 41+ char headlines client-side.
 
-        Verified live 2026-04-30 against act_1276764704512927 — Meta accepted
+        Verified live 2026-04-30 against act_100000000000002 — Meta accepted
         and stored a 41-char headline ("21% BTW cadeau op hordeuren en raamhorren")
         verbatim. Pre-flight guards reject strings the Meta UI accepts.
         """
@@ -839,7 +839,7 @@ class TestDynamicCreatives:
         + matching title_label on the rule. Without dict-form support, callers
         get Meta error 1885878 (Multiple titles assets can not be applied to
         rule) or 2446173 (Target rule label doesn't refer to any of the asset
-        labels). Verified live 2026-04-30 against act_1276764704512927 — the
+        labels). Verified live 2026-04-30 against act_100000000000002 — the
         full dict-form shape is accepted and stored verbatim.
         """
         with patch('meta_ads_mcp.core.ads.make_api_request', new_callable=AsyncMock) as mock_api:

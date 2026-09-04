@@ -35,7 +35,7 @@ async def test_simple_creative_uses_object_story_spec():
         
         # Call create_ad_creative with singular headline and description
         result = await create_ad_creative(
-            account_id="act_701351919139047",
+            account_id="act_100000000000001",
             image_hash="test_hash_123",
             name="Math Problem - Hormozi",
             link_url="https://adrocketx.ai/",
@@ -105,7 +105,7 @@ async def test_dynamic_creative_uses_asset_feed_spec():
         
         # Call with PLURAL headlines and descriptions (dynamic creative)
         result = await create_ad_creative(
-            account_id="act_701351919139047",
+            account_id="act_100000000000001",
             image_hash="test_hash_456",
             name="Dynamic Creative Test",
             link_url="https://example.com/",

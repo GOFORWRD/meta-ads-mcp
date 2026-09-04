@@ -34,7 +34,7 @@ async def _call_and_get_params(breakdown, **kwargs):
     with patch('meta_ads_mcp.core.insights.make_api_request', new_callable=AsyncMock) as mock_api:
         mock_api.return_value = {"data": []}
         await get_insights(
-            object_id="act_701351919139047",
+            object_id="act_100000000000001",
             level="account",
             time_range="last_30d",
             breakdown=breakdown,

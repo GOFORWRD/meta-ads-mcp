@@ -238,7 +238,7 @@ curl -X POST http://localhost:8080/mcp \
     "params": {
       "name": "get_insights",
       "arguments": {
-        "object_id": "act_701351919139047",
+        "object_id": "act_100000000000001",
         "time_range": "last_30d",
         "level": "campaign"
       }

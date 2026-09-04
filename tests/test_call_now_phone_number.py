@@ -30,7 +30,7 @@ async def test_simple_image_call_now_serializes_phone_number_as_tel_link():
         ]
 
         result = await create_ad_creative(
-            account_id="act_701351919139047",
+            account_id="act_100000000000001",
             image_hash="test_hash_123",
             name="Plumbing Call Ad",
             link_url="https://facebook.com/105246524341910/",
@@ -77,7 +77,7 @@ async def test_simple_image_without_phone_number_has_no_tel_link_in_cta():
         ]
 
         result = await create_ad_creative(
-            account_id="act_701351919139047",
+            account_id="act_100000000000001",
             image_hash="test_hash_456",
             name="Regular Ad",
             link_url="https://example.com/",
@@ -122,7 +122,7 @@ async def test_dof_image_call_now_serializes_phone_number_as_tel_link():
         ]
 
         result = await create_ad_creative(
-            account_id="act_701351919139047",
+            account_id="act_100000000000001",
             image_hashes=["hash_a"],
             name="Plumbing DOF Call Ad",
             link_url="https://facebook.com/105246524341910/",
@@ -171,7 +171,7 @@ async def test_simple_video_call_now_serializes_phone_number_as_tel_link():
         ]
 
         result = await create_ad_creative(
-            account_id="act_701351919139047",
+            account_id="act_100000000000001",
             video_id="video_123",
             name="Plumbing Video Call Ad",
             link_url="https://facebook.com/105246524341910/",

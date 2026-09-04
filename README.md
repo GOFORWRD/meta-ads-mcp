@@ -1,5 +1,21 @@
 # Meta Ads MCP
 
+> ### ⚠️ Unofficial fork
+>
+> This is a **modified fork** of [pipeboard-co/meta-ads-mcp](https://github.com/pipeboard-co/meta-ads-mcp),
+> published for reference and collaboration. It is **not** the official Pipeboard project and is
+> **not maintained, endorsed, or supported by Pipeboard**.
+>
+> Please do **not** contact Pipeboard's Discord or support email about this fork — raise an issue here instead.
+> For the official, supported project, go to the [upstream repository](https://github.com/pipeboard-co/meta-ads-mcp).
+>
+> Licensed under the **Business Source License 1.1** (see [LICENSE](LICENSE)) — inherited from upstream.
+> BSL is *not* an open-source licence: production use is permitted **except** offering the work to third
+> parties on a hosted or embedded basis competing with the licensor's commercial offerings. It converts to
+> Apache 2.0 on **1 January 2029**. Review the licence before using this in production.
+>
+> Ad account IDs, page names and similar identifiers in the tests and docs are placeholders.
+
 A [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server that lets AI assistants — Claude, ChatGPT, Perplexity, Cursor, or any MCP client — run your Meta Ads end to end: launch campaigns, upload creatives, update budgets, and analyze performance through natural conversation across Facebook, Instagram, and every Meta ad surface. Available as a **hosted remote MCP** — no developer token, no self-hosting required.
 
 This is the **Meta Ads node** of the [Pipeboard](https://pipeboard.co) MCP family — five remote MCP servers (Meta, Google, TikTok, Snap, Reddit) plus a unified [Pipeboard CLI](https://github.com/pipeboard-co/pipeboard-cli), **230+ tools** in total, one auth, one safety model. If you are comparing single-platform MCPs, you are looking at one node of a network — see [The Pipeboard MCP Family](#the-pipeboard-mcp-family) below.
@@ -507,7 +523,7 @@ For advanced users who need to self-host, the package can be installed from sour
     - Automatically includes page searching when query mentions "page" or "pages"
     - Inputs:
       - `access_token` (optional): Meta API access token (will use cached token if not provided)
-      - `query`: Search query string (e.g., "Injury Payouts pages", "active campaigns")
+      - `query`: Search query string (e.g., "Example Advertiser pages", "active campaigns")
     - Returns: List of matching record IDs in ChatGPT-compatible format
 
 ## Licensing

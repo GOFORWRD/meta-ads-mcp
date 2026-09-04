@@ -12,7 +12,7 @@ async def test_create_adset_passes_regional_regulation_identities():
         mock_api.return_value = sample_response
 
         result = await create_adset(
-            account_id="act_198610914369515",
+            account_id="act_100000000000007",
             campaign_id="cmp_1",
             name="SG Adset",
             optimization_goal="LINK_CLICKS",

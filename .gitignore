@@ -38,3 +38,23 @@ debug/
 
 internal/
 uv.lock
+
+# --- Deployment / live-host files (NEVER commit) ---
+# These live only on the VPS and contain live credentials. They were previously
+# excluded via .git/info/exclude, which is local-only and is lost on any fresh
+# clone or .git rebuild. Duplicated here so the protection is version-controlled
+# and travels with the repo. sync.sh runs `git add -A` on a 2-minute timer, so
+# this list is the last line of defence.
+Caddyfile
+docker-compose.yml
+.deploy-key
+sync.sh
+sync.log
+*.service
+*.timer
+
+# Credentials / keys, belt-and-braces
+*.key
+id_rsa*
+id_ed25519*
+*.log

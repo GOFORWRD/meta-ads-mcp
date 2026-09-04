@@ -305,7 +305,7 @@ class OpenAIMCPTester:
         print("\n🔍 Testing page search functionality")
         
         # Test 1: Search with page-related query that matches an account name
-        page_search_result = self.test_search_tool_call("Injury Payouts pages", auth_headers)
+        page_search_result = self.test_search_tool_call("Example Advertiser pages", auth_headers)
         
         if not page_search_result["success"]:
             return {

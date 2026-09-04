@@ -12,7 +12,7 @@ async def test_create_simple_creative_with_real_api():
     """Test creating a simple creative with singular headline/description using real Meta API."""
     
     # Account and image details from user
-    account_id = "act_3182643988557192"
+    account_id = "act_100000000000005"
     image_hash = "ca228ac8ff3a66dca9435c90dd6953d6"
     
     # Create a simple creative with singular headline and description

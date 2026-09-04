@@ -23,7 +23,7 @@ class TestDSAIntegration:
         
         # Step 1: Get account info and detect DSA requirement
         mock_account_response = {
-            "id": "act_701351919139047",
+            "id": "act_100000000000001",
             "name": "Test European Account",
             "account_status": 1,
             "business_country_code": "DE",  # Germany - DSA compliant
@@ -37,7 +37,7 @@ class TestDSAIntegration:
                 mock_account_api.return_value = mock_account_response
                 
                 # Get account info and verify DSA detection
-                result = await get_account_info(account_id="act_701351919139047")
+                result = await get_account_info(account_id="act_100000000000001")
                 
                 # Handle new return format (dictionary instead of JSON string)
                 if isinstance(result, dict):
@@ -65,7 +65,7 @@ class TestDSAIntegration:
                 
                 # Create ad set with DSA beneficiary
                 result = await create_adset(
-                    account_id="act_701351919139047",
+                    account_id="act_100000000000001",
                     campaign_id="23842588888640184",
                     name="Test European Ad Set",
                     optimization_goal="LINK_CLICKS",
@@ -106,7 +106,7 @@ class TestDSAIntegration:
                 mock_api.side_effect = Exception(json.dumps(mock_error_response))
                 
                 result = await create_adset(
-                    account_id="act_701351919139047",
+                    account_id="act_100000000000001",
                     campaign_id="23842588888640184",
                     name="Test European Ad Set",
                     optimization_goal="LINK_CLICKS",
@@ -133,7 +133,7 @@ class TestDSAIntegration:
                 mock_api.side_effect = Exception("Permission denied: business_management permission required")
                 
                 result = await create_adset(
-                    account_id="act_701351919139047",
+                    account_id="act_100000000000001",
                     campaign_id="23842588888640184",
                     name="Test European Ad Set",
                     optimization_goal="LINK_CLICKS",
@@ -234,7 +234,7 @@ class TestDSAIntegration:
                     mock_api.return_value = mock_response
                     
                     result = await create_adset(
-                        account_id="act_701351919139047",
+                        account_id="act_100000000000001",
                         campaign_id="23842588888640184",
                         name="Test Ad Set",
                         optimization_goal="LINK_CLICKS",
@@ -266,7 +266,7 @@ class TestDSAIntegration:
                 
                 # Create ad set
                 result = await create_adset(
-                    account_id="act_701351919139047",
+                    account_id="act_100000000000001",
                     campaign_id="120229656904980183",
                     name="Test Ad Set with DSA",
                     optimization_goal="LINK_CLICKS",
@@ -323,7 +323,7 @@ class TestDSAIntegration:
         
         # Step 1: Verify US account doesn't require DSA
         mock_us_account_response = {
-            "id": "act_701351919139047",
+            "id": "act_100000000000001",
             "name": "US Business Account",
             "business_country_code": "US",
             "account_status": 1
@@ -334,7 +334,7 @@ class TestDSAIntegration:
                 mock_auth.return_value = "test_access_token"
                 mock_api.return_value = mock_us_account_response
                 
-                result = await get_account_info(account_id="act_701351919139047")
+                result = await get_account_info(account_id="act_100000000000001")
                 result_data = json.loads(result)
                 
                 # Verify US account doesn't require DSA
@@ -354,7 +354,7 @@ class TestDSAIntegration:
                 mock_api.return_value = mock_create_response
                 
                 result = await create_adset(
-                    account_id="act_701351919139047",
+                    account_id="act_100000000000001",
                     campaign_id="120229656904980183",
                     name="Test US Ad Set",
                     optimization_goal="LINK_CLICKS",

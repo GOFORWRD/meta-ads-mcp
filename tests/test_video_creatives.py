@@ -1203,7 +1203,7 @@ async def test_lead_form_with_videos_and_rules_emits_call_to_actions_plural():
     but silently drops the form id, and the downstream create_ad fails with
     error_subcode 3390001 ("Missing Lead Form").
 
-    Live-verified 2026-04-30 against Sandbox A (act_1276764704512927) — POSTing
+    Live-verified 2026-04-30 against Sandbox A (act_100000000000002) — POSTing
     asset_feed_spec.call_to_actions plural with value.lead_gen_form_id and
     value.link returned creative 1651066586172582 with the form preserved on
     readback.
@@ -1225,7 +1225,7 @@ async def test_lead_form_with_videos_and_rules_emits_call_to_actions_plural():
         ]
 
         await create_ad_creative(
-            account_id="act_1276764704512927",
+            account_id="act_100000000000002",
             videos=[
                 {"video_id": "979767987909906", "label": "feed_1x1"},
                 {"video_id": "1603514887420866", "label": "reels_9x16"},
@@ -1295,7 +1295,7 @@ async def test_non_lead_cta_keeps_call_to_action_types_string_array():
         ]
 
         await create_ad_creative(
-            account_id="act_1276764704512927",
+            account_id="act_100000000000002",
             videos=[{"video_id": "979767987909906"}],
             name="Plain Video",
             link_url="https://www.example.com/",

@@ -26,7 +26,7 @@ class TestAccountInfoAccessFix:
         
         # Mock the direct account info API response
         mock_account_response = {
-            "id": "act_414174661097171",
+            "id": "act_100000000000003",
             "name": "Venture Hunting & Outdoors",
             "account_id": "414174661097171",
             "account_status": 1,
@@ -52,7 +52,7 @@ class TestAccountInfoAccessFix:
                 
                 # Verify the account info was returned successfully
                 assert "error" not in result_data
-                assert result_data["id"] == "act_414174661097171"
+                assert result_data["id"] == "act_100000000000003"
                 assert result_data["name"] == "Venture Hunting & Outdoors"
                 assert result_data["account_id"] == "414174661097171"
                 assert result_data["currency"] == "AUD"
@@ -65,7 +65,7 @@ class TestAccountInfoAccessFix:
                 
                 # Verify the API was called with correct parameters
                 mock_api.assert_called_once_with(
-                    "act_414174661097171",
+                    "act_100000000000003",
                     "test_access_token",
                     {
                         "fields": "id,name,account_id,account_status,amount_spent,balance,currency,age,business_city,business_country_code,timezone_name"
@@ -127,7 +127,7 @@ class TestAccountInfoAccessFix:
                 
                 # First call: direct account access attempt
                 mock_api.assert_any_call(
-                    "act_414174661097171",
+                    "act_100000000000003",
                     "test_access_token",
                     {
                         "fields": "id,name,account_id,account_status,amount_spent,balance,currency,age,business_city,business_country_code,timezone_name"

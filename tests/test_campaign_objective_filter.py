@@ -412,7 +412,7 @@ def tester(server_url):
 @pytest.fixture
 def account_id():
     """Default test account ID"""
-    return "act_701351919139047"
+    return "act_100000000000001"
 
 
 def test_server_running(check_server_running):
@@ -500,7 +500,7 @@ def main():
     """Main test execution for standalone running"""
     import sys
     
-    account_id = "act_701351919139047"  # Default test account
+    account_id = "act_100000000000001"  # Default test account
     
     tester = CampaignObjectiveFilterTester()
     success = tester.run_all_tests(account_id)

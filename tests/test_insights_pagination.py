@@ -23,7 +23,7 @@ class TestInsightsPagination:
 
     @pytest.fixture
     def valid_account_id(self):
-        return "act_701351919139047"
+        return "act_100000000000001"
 
     @pytest.fixture
     def mock_paginated_response_page1(self):

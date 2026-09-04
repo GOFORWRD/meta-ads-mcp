@@ -1617,7 +1617,7 @@ def _normalize_text_variants(items: Optional[List[Any]]) -> Optional[List[Dict[s
     adlabels, Meta rejects multi-headline + placement-customization creatives
     with error_subcode 1885878 ("Multiple titles assets can not be applied to
     rule #1") or 2446173 ("Target rule label doesn't refer to any of the
-    asset labels"). Verified live 2026-04-30 against act_1276764704512927:
+    asset labels"). Verified live 2026-04-30 against act_100000000000002:
     asset_feed_spec.titles with per-entry adlabels + asset_customization_rules
     with title_label is accepted by Meta and stored verbatim.
 
@@ -2174,7 +2174,7 @@ async def create_ad_creative(
     # No client-side length / count guards on headlines / descriptions / messages.
     # Meta enforces its own limits and returns clear errors; pre-flight guards reject
     # strings the Meta UI accepts (e.g. 41-char headlines verified live 2026-04-30
-    # against act_1276764704512927 — Meta returned 200 and stored the title verbatim).
+    # against act_100000000000002 — Meta returned 200 and stored the title verbatim).
 
     # Prepare the API endpoint for creating a creative
     endpoint = f"{account_id}/adcreatives"

@@ -79,7 +79,7 @@ class TestInsightsActionsAndValues:
     @pytest.fixture
     def valid_account_id(self):
         """Valid account ID for testing"""
-        return "act_701351919139047"
+        return "act_100000000000001"
     
     @pytest.mark.asyncio
     async def test_actions_and_action_values_included_in_fields(self, mock_api_request, mock_auth_manager, valid_campaign_id):
@@ -443,7 +443,7 @@ class TestInsightsActionsAndValuesE2E:
         self.endpoint = f"{self.base_url}/mcp/"
         self.request_id = 1
         # Default account from workspace rules
-        self.account_id = "act_701351919139047"
+        self.account_id = "act_100000000000001"
 
     def _make_request(self, method: str, params: Dict[str, Any] = None) -> Dict[str, Any]:
         headers = {

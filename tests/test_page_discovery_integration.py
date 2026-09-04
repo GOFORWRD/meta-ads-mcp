@@ -77,7 +77,7 @@ class TestPageDiscoveryIntegration:
         mock_discovery_result = {
             "success": True,
             "page_id": "123456789",
-            "page_name": "Injury Payouts",
+            "page_name": "Example Advertiser",
             "source": "tracking_specs"
         }
         
@@ -107,7 +107,7 @@ class TestPageDiscoveryIntegration:
             # Verify the search results
             assert len(actual_result["data"]) == 1
             assert actual_result["data"][0]["id"] == "123456789"
-            assert actual_result["data"][0]["name"] == "Injury Payouts"
+            assert actual_result["data"][0]["name"] == "Example Advertiser"
             assert actual_result["search_term"] == "Injury"
             assert actual_result["total_found"] == 1
             assert actual_result["total_available"] == 1

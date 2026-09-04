@@ -15,7 +15,7 @@ sys.path.insert(0, _repo_root)
 
 from meta_ads_mcp.core import ads as ads_module
 
-ACCOUNT_ID = "act_1775818363064545"
+ACCOUNT_ID = "act_100000000000006"
 PAGE_ID = "1041573382375102"
 EVENT_ID = "2699305693795917"
 IMAGE_HASH = "ca228ac8ff3a66dca9435c90dd6953d6"

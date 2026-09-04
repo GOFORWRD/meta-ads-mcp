@@ -88,15 +88,15 @@ class TestGetAccountPages:
                     return mock_user_pages
                 elif endpoint == "3182643988557192/owned_pages":
                     return {"data": []}  # No business pages
-                elif endpoint == "act_3182643988557192/client_pages":
+                elif endpoint == "act_100000000000005/client_pages":
                     return mock_client_pages
-                elif endpoint == "act_3182643988557192/adcreatives":
+                elif endpoint == "act_100000000000005/adcreatives":
                     return mock_adcreatives
-                elif endpoint == "act_3182643988557192/ads":
+                elif endpoint == "act_100000000000005/ads":
                     return {"data": []}  # No ads
-                elif endpoint == "act_3182643988557192/promoted_objects":
+                elif endpoint == "act_100000000000005/promoted_objects":
                     return {"data": []}  # No promoted objects
-                elif endpoint == "act_3182643988557192/campaigns":
+                elif endpoint == "act_100000000000005/campaigns":
                     return {"data": []}  # No campaigns
                 elif endpoint in mock_page_details:
                     return mock_page_details[endpoint]
@@ -106,7 +106,7 @@ class TestGetAccountPages:
             mock_api.side_effect = mock_api_side_effect
             
             # Call the function
-            result = await get_account_pages(account_id="act_3182643988557192")
+            result = await get_account_pages(account_id="act_100000000000005")
             result_data = json.loads(result)
             
             # Verify the structure and content
